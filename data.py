@@ -114,7 +114,7 @@ teachers = [
         "rating": 4.3,
         "price": 900,
         "goals": ["travel"],
-         "free": {
+        "free": {
 
             "mon": {"8:00": False, "10:00": False, "12:00": False, "14:00": False, "16:00": True, "18:00": True,
                     "20:00": True, "22:00": True},
