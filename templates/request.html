@@ -2,76 +2,39 @@
    {% block main %}
 <main class="container mt-5">
     <div class="col-12 col-sm-10 col-lg-6 offset-lg-3 offset-sm-1">
-        <form action="request_done.html" class="card mb-5">
-            <div class="card-body text-center pt-5">
-                <h1 class="h3 card-title mt-4 mb-2">Подбор преподавателя</h1>
+        <form action="/request_done/" method="POST" class="card mb-5">
+            <div class="card-body text-center pt-2">
+                <h1 class="h3 card-title mt-2 mb-1">Подбор преподавателя</h1>
                 <p class="px-5">Напишите, чего вам нужно и&nbsp;мы&nbsp;подберем отличных&nbsp;ребят</p>
             </div>
             <hr>
             <div class="card-body mx-3">
-                <div class="row">
+                <div class="row small">
+
                     <div class="col">
                         <p>Какая цель занятий?</p>
+                        {% for goal in form.goals %}
                         <div class="form-check ">
-                            <input checked class="form-check-input" id="goal1" name="goal" type="radio" value="travel">
-                            <label class="form-check-label" for="goal1">
-                                Для путешествий
-                            </label>
+                            {{ goal }} {{ goal.label }}
                         </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" id="goal2" name="goal" type="radio" value="learn">
-                            <label class="form-check-label" for="goal2">
-                                Для школы
-                            </label>
-                        </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" id="goal3" name="goal" type="radio" value="work">
-                            <label class="form-check-label" for="goal2">
-                                Для работы
-                            </label>
-                        </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" id="goal4" name="goal" type="radio" value="move">
-                            <label class="form-check-label" for="goal2">
-                                Для переезда
-                            </label>
-                        </div>
+                        {% endfor %}
                     </div>
                     <div class="col">
                         <p>Сколько времени есть?</p>
-                        <div class="form-check">
-                            <input class="form-check-input" id="time1" name="time" type="radio" value="1-2">
-                            <label class="form-check-label" for="time1">
-                                1-2 часа в&nbsp;неделю
-                            </label>
+                        {% for hour in form.hours %}
+                        <div class="form-check ">
+                            {{ hour }} {{ hour.label }}
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" id="time2" name="time" type="radio" value="3-5">
-                            <label class="form-check-label" for="time2">
-                                3-5 часов в&nbsp;неделю
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input checked class="form-check-input" id="time3" name="time" type="radio" value="5-7">
-                            <label class="form-check-label" for="time3">
-                                5-7 часов в&nbsp;неделю
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" id="time4" name="time" type="radio" value="7-10">
-                            <label class="form-check-label" for="time4">
-                                7-10 часов в&nbsp;неделю
-                            </label>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
             <hr>
             <div class="card-body mx-3">
-                <label class="mb-1 mt-2">Вас зовут</label>
-                <input class="form-control" placeholder="" type="text">
-                <label class="mb-1 mt-2">Ваш телефон</label>
-                <input class="form-control" placeholder="" type="text">
+                {{ form.name.label(class_="mb-1 mt-2") }}
+                {{ form.name(class_="form-control") }}
+                {{ form.phone.label(class_="mb-1 mt-2") }}
+                {{ form.phone(class_="form-control") }}
                 <input class="btn btn-primary mt-4 mb-2" type="submit" value="Найдите мне преподавателя">
             </div>
         </form>
