@@ -11,7 +11,7 @@
 <body>
 <header class="container mt-3">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">TINYSTEPS</a>
+        <a class="navbar-brand" href="/">TINYSTEPS</a>
         <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
                 data-target="#navbarNav" data-toggle="collapse" type="button">
             <span class="navbar-toggler-icon"></span>
@@ -35,48 +35,45 @@
     <div class="card my-4 mx-auto">
         <div class="card-body m-2 m-md-4">
             <article class="row">
-                <div class="col-5"><img alt="" class="img-fluid" src="../static/pict 1.png"></div>
+                <div class="col-5"><img alt="" class="img-fluid" src="{{ teacher.picture }}"></div>
                 <div class="col-7">
 
                     <section class="teacher=info">
 
-                        <h1 class="h2">Morris Simmmons</h1>
-                        <p><span class="badge badge-secondary mr-2">Для путешествий </span>Рейтинг: 4.8 Ставка: 1200 /
-                            час</p>
-                        <p>Native English language teacherHi Everyone! My name is Richard; I am a native English
-                            speaker. I was born in South Africa, Spent 12 years living in the UK and am now living in
-                            Spain. I have a degree in food science, a TEFL certificate and a level 3 in training and
-                            education. I worked in cheese manufacturing for many years and have good knowledge of dairy
-                            production and food safety topics.</p>
+                        <h1 class="h2">{{ teacher.name }}</h1>
+                        <p>
+                            {% for i in goalsdesc %}
+                            <span class="badge badge-secondary mr-2 {{ goalstyle[loop.index] }}">{{ i }}</span>
+                            {% endfor %} <br /> Рейтинг: {{ teacher.rating }} Ставка:
+                            {{ teacher.price }} руб/час</p>
+                        <p>{{ teacher.about }}</p>
 
                     </section>
 
                     <section class="available">
 
                         <h4 class="mb-4 mt-5">Записаться на пробный урок</h4>
+                        {% for day, ddesc in days.items() %}
+                        {% set ind = loop.index-1 %}
 
-                        <h6 class="mt-4">Понедельник</h6>
-                        <a class="btn btn-outline-success mr-2" href="#">12:00 свободно</a>
-                        <a class="btn btn-outline-success  mr-2" href="#">14:00 свободно</a>
 
-                        <h6 class="mt-4">Вторник</h6>
-                        <a class="btn btn-outline-success  mr-2" href="#">14:00 свободно</a>
-                        <a class="btn btn-outline-success  mr-2" href="#">16:00 свободно</a>
+                        {% if timesheet[ind] == 0 %}
+                        <h6 class="alert alert-danger my-1">{{ ddesc }}</h6>
+                        <p class="pl-2">Нет свободных уроков</p>
+                        {% else %}
+                        <h6 class="alert alert-success py-2 my-1">{{ ddesc }}</h6>
+                        <div class="alert-outline-success pl-2 mt-2 mb-4">
+                        {% for i in range(8) %}
+                        {% if timesheet[ind]|band(b=2**i) %}
+                        <a class="btn btn-outline-success"
+                           href="/booking/{{ teacher.id }}/{{ day }}/{{ 8 + 2*i }}:00/">{{ 8 + 2*i }}:00</a>
+                        {% endif %}
+                        {% endfor %}
+                        </div>
 
-                        <h6 class="mt-4">Среда</h6>
-                        <a class="btn btn-outline-success  mr-2" href="#">14:00 свободно</a>
-                        <a class="btn btn-outline-success  mr-2" href="#">16:00 свободно</a>
-                        <a class="btn btn-outline-success  mr-2" href="#">18:00 свободно</a>
+                        {% endif %}
 
-                        <h6 class="mt-4">Четверг</h6>
-
-                        <p>Нет свободных уроков</p>
-
-                        <h6 class="mt-4">Пятница</h6>
-                        <a class="btn btn-outline-success  mr-2" href="#">14:00 свободно</a>
-                        <a class="btn btn-outline-success  mr-2" href="#">16:00 свободно</a>
-                        <a class="btn btn-outline-success  mr-2" href="#">18:00 свободно</a>
-
+                    {% endfor %}
                     </section>
 
                 </div>

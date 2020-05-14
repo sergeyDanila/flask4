@@ -2,6 +2,9 @@ import json
 import data
 
 goals = data.goals
+goals["coding"] = "для программирования"
+goalstyle = {"travel": "alert-danger", "study": "alert-success", "work": "alert-info",
+              "relocate": "alert-warning", "coding": "alert-dark" }
 days = {"mon": "Понедельник", "tue": "Вторник", "wed": "Среда", "thu": "Четверг",
         "fri": "Пятница", "sat": "Суббота", "sun": "Воскресенье"}
 teachers = []
@@ -21,8 +24,10 @@ for teach in data.teachers:
     timesheets.append([teach["id"], timesheet])
     del teach["free"]
     teachers.append(teach)
+    if 8 <= teach["id"] <= 11:
+        teach["goals"].append("coding")
 
-jdump = {"goals": goals, "days": days, "timesheets": timesheets, "teachers": teachers}
+jdump = {"goals": goals, "goalstyle": goalstyle, "days": days, "timesheets": timesheets, "teachers": teachers}
 
 with open('data.json', 'w', encoding="utf-8") as f:
     json.dump(jdump, f, ensure_ascii=False)
