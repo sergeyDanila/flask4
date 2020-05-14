@@ -1,4 +1,5 @@
 import json
+from random import shuffle
 from flask import Flask, render_template
 
 import filter
@@ -17,13 +18,24 @@ def band(a, b):
 
 @app.route('/')  # - главной / – здесь будет главная
 def render_index():
+    teachers = data["teachers"]
+    shuffle(teachers)
     return render_template('index.html',
+                           teachers=teachers[:6],
+                           goals=data["goals"],
+                           goalstyle=data["goalstyle"],
+                           goalicon=data["goalicon"],
                            )
 
 
 @app.route('/goals/<goal>/')  # - цели /goals/<goal>/  – здесь будет цель
 def render_goals(goal):
+    teachers = [t for t in data["teachers"] if (t["goals"]).count(goal) == 1]
     return render_template('goal.html',
+                           teachers=teachers,
+                           goalstyle=data["goalstyle"].get(goal),
+                           goalicon=data["goalicon"].get(goal),
+                           goaldesc=data["goals"].get(goal),
                            goal=goal)
 
 
@@ -34,10 +46,12 @@ def render_profile(teacherid):
     timesheet = [t for t in data["timesheets"] if t[0] == teacherid][0][1]
     days = data["days"]
     goalsdesc = []
-    goalstyle=[]
+    goalstyle = []
+    goalsicon = []
     for i in teachgoals:
         goalsdesc.append(data["goals"][i])
         goalstyle.append(data["goalstyle"][i])
+        goalsicon.append(data["goalicon"][i])
 
     return render_template('profile.html',
                            teacherid=teacherid,
@@ -45,6 +59,7 @@ def render_profile(teacherid):
                            teachgoals=teachgoals,
                            goalsdesc=goalsdesc,
                            goalstyle=goalstyle,
+                           goalsicon=goalsicon,
                            timesheet=timesheet,
                            days=days)
 
@@ -52,6 +67,7 @@ def render_profile(teacherid):
 @app.route('/request/')  # - заявки на подбор /request/ – здесь будет заявка на подбор
 def render_request():
     return render_template('request.html',
+                            goals=data["goals"],
                            )
 
 
@@ -61,12 +77,12 @@ def render_reqdone():
                            )
 
 
-@app.route('/booking/<teacherid>/<day>/<time>/')  # - формы бронирования <id учителя>/<день недели>/<время>/
+@app.route('/booking/<int:teacherid>/<day>/<time>/')  # - формы бронирования <id учителя>/<день недели>/<время>/
 def render_booking(teacherid, day, time):
     return render_template('booking.html',
                            teacherid=teacherid,
-
-                           day=day,
+                           teacher=[t for t in data["teachers"] if t["id"] == teacherid][0],
+                           daydesc=data["days"].get(day),
                            time=time)
 
 
