@@ -23,8 +23,9 @@ choice = [('1', '1-2 часа в неделю'),
 
 
 class RequestForm(FlaskForm):
-    goals = RadioField('Какая цель занятий?', choices=data["goals"].items())
-    hours = RadioField('Сколько времени есть?', choices=choice)
+    goals = RadioField('Какая цель занятий?', validators=[InputRequired()], choices=data["goals"].items())
+    hours = RadioField(label='Сколько времени есть?', validators=[InputRequired()], choices=choice,
+                       validate_choice=True)
     name = StringField('Имя')
     phone = StringField('Контакты', [InputRequired(message="Введите контактную информацию")])
 
@@ -54,6 +55,7 @@ def render_index():
                            goalicon=data["goalicon"],
                            )
 
+
 @app.route('/all/')  # / – здесь будут все предподаватели
 def render_all():
     teachers = data["teachers"]
@@ -65,6 +67,7 @@ def render_all():
                            goalstyle=data["goalstyle"],
                            goalicon=data["goalicon"],
                            )
+
 
 @app.route('/goals/<goal>/')  # - цели /goals/<goal>/  – здесь будет цель
 def render_goals(goal):
@@ -120,10 +123,9 @@ def render_reqdone():
         goal = form.goals.data
         glabel = data["goals"].get(goal)
         hour = form.hours.data
-        hlabel = [val for key, val in choice if key == hour][0]
+        hlabel = 'совсем-совсем мало' if hour is None else [val for key, val in choice if key == hour][0]
 
-        save = {"timestamp": str(datetime.now())}
-        save["request"] = [name, phone, goal, glabel, hour, hlabel]
+        save = {"timestamp": str(datetime.now()), "request": [name, phone, goal, glabel, hour, hlabel]}
         jsonsave('request.json', save)
 
         return render_template('request_done.html',
