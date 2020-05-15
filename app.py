@@ -107,7 +107,7 @@ def render_reqdone():
         name = form.name.data
         phone = form.phone.data
         goal = form.goals.data
-        glabel =  data["goals"].get(goal)  #[val for key, val in data["goals"].items() if key == goal][0]
+        glabel = data["goals"].get(goal)
         hour = form.hours.data
         hlabel = [val for key, val in choice if key == hour][0]
 
@@ -146,8 +146,7 @@ def render_bookdone():
         day = form.day.data
         time = form.time.data
 
-        save = {"timestamp": str(datetime.now())}
-        save["booking"] = [name, phone, teacher, day, time]
+        save = {"timestamp": str(datetime.now()), "booking": [name, phone, teacher, day, time]}
         jsonsave('booking.json', save)
 
         return render_template('booking_done.html',
@@ -160,4 +159,4 @@ def render_bookdone():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
