@@ -1,12 +1,13 @@
+# первоначальная загрузка data.py->data.json
 import json
 import data
 
 goals = data.goals
 goals["coding"] = "Для программирования"
 goalstyle = {"travel": "danger", "study": "success", "work": "info",
-              "relocate": "secondary", "coding": "dark" }
+             "relocate": "secondary", "coding": "dark"}
 goalicon = {"travel": "fas fa-map-marked-alt", "study": "fas fa-user-graduate", "work": "fas fa-business-time",
-              "relocate": "fas fa-tractor", "coding": "fas  fa-laptop-code" }
+            "relocate": "fas fa-tractor", "coding": "fas  fa-laptop-code"}
 days = {"mon": "Понедельник", "tue": "Вторник", "wed": "Среда", "thu": "Четверг",
         "fri": "Пятница", "sat": "Суббота", "sun": "Воскресенье"}
 teachers = []
@@ -29,7 +30,8 @@ for teach in data.teachers:
     if 8 <= teach["id"] <= 11:
         teach["goals"].append("coding")
 
-jdump = {"goals": goals, "goalstyle": goalstyle, "goalicon":goalicon, "days": days, "timesheets": timesheets, "teachers": teachers}
+jdump = {"goals": goals, "goalstyle": goalstyle, "goalicon": goalicon, "days": days, "timesheets": timesheets,
+         "teachers": teachers}
 
 with open('data.json', 'w', encoding="utf-8") as f:
     json.dump(jdump, f, ensure_ascii=False)

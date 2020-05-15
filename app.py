@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from random import shuffle
 
@@ -5,6 +6,8 @@ from flask import Flask, render_template, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, RadioField
 from wtforms.validators import InputRequired
+
+from jsonsave import jsonsave
 
 app = Flask(__name__)
 app.secret_key = "YOHOHO & Rum bottle!"
@@ -108,6 +111,10 @@ def render_reqdone():
         hour = form.hours.data
         hlabel = [val for key, val in choice if key == hour][0]
 
+        save = {"timestamp": str(datetime.now())}
+        save["request"] = [name, phone, goal, glabel, hour, hlabel]
+        jsonsave('request.json', save)
+
         return render_template('request_done.html',
                                name=name,
                                phone=phone,
@@ -138,6 +145,10 @@ def render_bookdone():
         teacher = form.teacher.data
         day = form.day.data
         time = form.time.data
+
+        save = {"timestamp": str(datetime.now())}
+        save["booking"] = [name, phone, teacher, day, time]
+        jsonsave('booking.json', save)
 
         return render_template('booking_done.html',
                                name=name,
