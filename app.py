@@ -54,6 +54,17 @@ def render_index():
                            goalicon=data["goalicon"],
                            )
 
+@app.route('/all/')  # / – здесь будут все предподаватели
+def render_all():
+    teachers = data["teachers"]
+    shuffle(teachers)
+
+    return render_template('index.html',
+                           teachers=teachers,
+                           goals=data["goals"],
+                           goalstyle=data["goalstyle"],
+                           goalicon=data["goalicon"],
+                           )
 
 @app.route('/goals/<goal>/')  # - цели /goals/<goal>/  – здесь будет цель
 def render_goals(goal):
