@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+   {% block main %}
+<main class="container mt-3 mb-5">
+    <section>
+        <h1 class="h1 text-center mx-auto mt-4 py-5"><strong> Ни бе, ни мэ по-английски?<br>Приходи к нам! Будет и Бе-И-Мэ!</strong></h1>
+        <div class="text-center mb-5">
+            <div aria-label="Basic example" class="btn-group mx-auto mb-0" role="group">
+                {% for goal,desc in goals.items() %} {% set i = loop.index-1 %}
+                <a class="btn btn-outline-{{ goalstyle.get(goal,'primary') }}" href="/goals/{{ goal }}/"> <i class="{{ goalicon.get(goal,'fas fa-bullseye') }}"></i> {{ desc }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <h2 class="h5 text-center mb-5">Наши преподаватели</h2>
+        <div class="row">
+            <div class="col-12 col-lg-10 offset-lg-1 m-auto">
+                {% for teacher in teachers %}
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-3"><img alt="" class="img-fluid" src="{{ teacher.picture }}"></div>
+                            <div class="col-9">
+                                <p class="float-right">Рейтинг: {{ teacher.rating }} Ставка: {{ teacher.price }} руб./час</p>
+                                <h2 class="h4">{{ teacher.name }}</h2>
+                                <p>{{ teacher.about|truncate(170) }}</p>
+                                <a class="btn btn-outline-primary btn-sm mr-3 mb-2" href="/profiles/{{ teacher.id }}/">Показать
+                                    информацию и расписание</a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>{% endfor %}
+            </div>
+        </div>
+    </section>
+<section>{% include 'recomendation.html' %}</section>
+</main>
+{% endblock %}
