@@ -1,6 +1,6 @@
 # первоначальная загрузка data.py->data.json
 import json
-import data
+import app.data as data
 
 goals = data.goals
 goals["coding"] = "Для программирования"

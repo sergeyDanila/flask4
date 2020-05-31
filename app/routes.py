@@ -1,23 +1,14 @@
 from datetime import datetime
-import json
-from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_wtf import FlaskForm
+
+from flask import render_template, request, redirect, url_for
 from sqlalchemy import text
+from flask_wtf import FlaskForm
 from wtforms import StringField, HiddenField, RadioField
 from wtforms.validators import InputRequired
 
 from app import app, db
-
 from app.models import Booking, Goal, Teacher, Request
 
-# app = Flask(__name__)
-# app.secret_key = "YOHOHO & Rum bottle!"
-
-
-with open('data.json', 'r', encoding="utf-8") as f:
-    data = json.loads(f.read())
 
 # Цели нужны практически во всех роутах залезем за ними в базу всего 1 раз
 res = db.session.query(Goal)
@@ -28,6 +19,9 @@ for g in res.all():
     goals[g.name] = g.desc
     goalstyle[g.name] = g.style
     goalicon[g.name] = g.icon
+
+# Справочник дней
+days = dict(db.session.execute(text("select day, day_desc from days order by id")).fetchall())
 
 
 class RequestForm(FlaskForm):
@@ -95,13 +89,12 @@ def render_goals(goal):
 @app.route('/profiles/<int:teacherid>/')  # /profiles/<id учителя>/ – здесь будет преподаватель
 def render_profile(teacherid):
     # teacher = [t for t in data["teachers"] if t["id"] == teacherid][0]
-    t = db.session.query(Teacher).filter(Teacher.id == teacherid).first()
+    t = db.session.query(Teacher).get_or_404(teacherid)
     teacher = t
 
     sql = f"select timesheet from timesheets where teach_id={teacherid}"
     timesheet = db.session.execute(text(sql)).first()
 
-    days = dict(db.session.execute(text("select day, day_desc from days order by id")).fetchall())
 
     sql = f"select name,desc,style,icon from goals g join teach_goals t on g.id = t.goal_id where teach_id = {teacherid}"
     tg = db.session.execute(text(sql)).fetchall()
@@ -167,7 +160,6 @@ def render_booking(teacherid, day, time):
         teacher = form.teacher.data
         day = form.day.data
         time = form.time.data
-
         db.session.add(Booking(created=datetime.now(),
                                remote_addr=request.remote_addr,
                                name=name,
@@ -176,16 +168,18 @@ def render_booking(teacherid, day, time):
                                time=time,
                                teacher_id=teacherid))
         db.session.commit()
+
         return render_template('booking_done.html',
                                name=name,
                                phone=phone,
                                teacher=teacher,
                                time=time,
-                               day=data["days"].get(day))
+                               day=days[day])
+    
     return render_template('booking.html',
                            teacherid=teacherid,
-                           teacher=[t for t in data["teachers"] if t["id"] == teacherid][0],
-                           daydesc=data["days"].get(day),
+                           teacher=db.session.query(Teacher).get_or_404(teacherid),
+                           daydesc=days[day],
                            day=day,
                            time=time,
                            form=form)

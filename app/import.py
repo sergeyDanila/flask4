@@ -1,5 +1,5 @@
-from app import db
-
+# грузим данные в СУБД после её создания
+# вместо DELETE для очистки таблиц лучше  использовать TRUNCATE, но sqlite его не признает
 import json
 from sqlalchemy import text
 from flask_sqlalchemy import SQLAlchemy
@@ -20,7 +20,7 @@ goals = []
 g = []
 ind = 0
 for i, val in data["goals"].items():
-    goals.append(Goal(name=i, desc=val, style=data["goalstyle"][i], icon=data["goalicon"][i]))
+    goals.append(Goal(id=ind, name=i, desc=val, style=data["goalstyle"][i], icon=data["goalicon"][i]))
     g.append(i)
     db.session.add(goals[ind])
     ind += 1
